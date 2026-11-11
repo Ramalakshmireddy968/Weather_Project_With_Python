@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Application</title>
+
+    <link rel="stylesheet"
+          href="{% static 'weather/style.css' %}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Heading -->
+        <h1>Weather Forecast Application</h1>
+
+        <!-- Search form -->
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text"
+                   name="city"
+                   placeholder="Enter city name"
+                   required>
+
+            <button type="submit">Search Weather</button>
+        </form>
+
+        <!-- Error message -->
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <!-- Weather information -->
+        {% if weather %}
+
+            <h2>{{ weather.city }}, {{ weather.country }}</h2>
+
+            <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png">
+
+            <h1 class="temperature">
+                {{ weather.temperature }} °C
+            </h1>
+
+            <p>{{ weather.description }}</p>
+
+            <div class="weather-details">
+                <p>Humidity: {{ weather.humidity }}%</p>
+                <p>Wind Speed: {{ weather.wind_speed }} m/s</p>
+                <p>Feels Like: {{ weather.feels_like }} °C</p>
+                <p>Minimum: {{ weather.temp_min }} °C</p>
+                <p>Maximum: {{ weather.temp_max }} °C</p>
+            </div>
+
+        {% endif %}
+
+        <!-- Search history -->
+        <div class="history">
+
+            <h2>Recent Searches</h2>
+
+            {% for item in history %}
+                <p>{{ item.city }} - {{ item.searched_at }}</p>
+            {% empty %}
+                <p>No search history available.</p>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>
